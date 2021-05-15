@@ -1,5 +1,6 @@
 package com.csdemo.coffeestore.service;
 
+import com.csdemo.coffeestore.contract.ItemsResponse;
 import com.csdemo.coffeestore.repository.ItemsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class ItemsService {
     @Autowired
     private ItemsRepository itemsRepo;
 
-    public List<String> getItemsList() {
+    public List<ItemsResponse> getItemsList() {
         return itemsRepo.findAllItems();
     }
 }
