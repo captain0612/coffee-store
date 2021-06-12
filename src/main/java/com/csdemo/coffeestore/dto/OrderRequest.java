@@ -2,15 +2,12 @@ package com.csdemo.coffeestore.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 @Getter
 @Setter
-@Slf4j
-public class ItemsRequest {
 
+public class OrderRequest {
+    private int quantity;
     private String name;
 
-    private int quantity;
-
-    private int price;
 }

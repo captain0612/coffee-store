@@ -1,16 +1,19 @@
-package com.csdemo.coffeestore.dto;
+package com.csdemo.coffeestore.contract;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 @Getter
 @Setter
-@Slf4j
-public class ItemsRequest {
+
+public class OrderResponse {
 
     private String name;
 
-    private int quantity;
+    private String availability;
 
     private int price;
-}
+
+    }
+

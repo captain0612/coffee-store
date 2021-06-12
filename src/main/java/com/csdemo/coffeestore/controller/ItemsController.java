@@ -17,15 +17,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/items")
-//@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 public class ItemsController {
 
     @Autowired
     private ItemsService itemsService;
 
-    @Autowired
-    private ItemsRepository itemRepo;
+
 
     @GetMapping
     public ResponseEntity getItemsList() {
@@ -41,11 +39,24 @@ public class ItemsController {
     }
 
     @PostMapping
-    public ResponseEntity postItem(@RequestBody ItemsResponse itemRequest){
-        Items item = new Items();
-        BeanUtils.copyProperties(itemRequest,item);
+    public ResponseEntity postItem(@RequestBody ItemsRequest itemRequest) {
+        if (itemsService.addItems(itemRequest))
+        return new ResponseEntity<>("item added in the menu",HttpStatus.ACCEPTED);
 
-        itemRepo.save(item);
-        return new ResponseEntity<>( HttpStatus.ACCEPTED);
+        else
+            return new ResponseEntity<>("Updated Quantity and Price of "+itemRequest.getName()+" ",HttpStatus.CONFLICT);
     }
+
+    @DeleteMapping(value = "/delete/{itemName}")
+    public ResponseEntity<Long> deletePost(@PathVariable String itemName) {
+        Boolean isRemoved = itemsService.deleteItemByName(itemName);
+
+        if (!isRemoved) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity("Deleted", HttpStatus.OK);
+
+    }
+
 }
