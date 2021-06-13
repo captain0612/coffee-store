@@ -2,11 +2,8 @@ package com.csdemo.coffeestore.controller;
 
 import com.csdemo.coffeestore.contract.ItemsResponse;
 import com.csdemo.coffeestore.dto.ItemsRequest;
-import com.csdemo.coffeestore.entity.Items;
-import com.csdemo.coffeestore.repository.ItemsRepository;
 import com.csdemo.coffeestore.service.ItemsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/items")
@@ -39,12 +37,12 @@ public class ItemsController {
     }
 
     @PostMapping
-    public ResponseEntity postItem(@RequestBody ItemsRequest itemRequest) {
-        if (itemsService.addItems(itemRequest))
-        return new ResponseEntity<>("item added in the menu",HttpStatus.ACCEPTED);
+    public ResponseEntity postItem(@RequestBody Map<String, List<ItemsRequest>> itemRequest) {
 
-        else
-            return new ResponseEntity<>("Updated Quantity and Price of "+itemRequest.getName()+" ",HttpStatus.CONFLICT);
+        itemsService.addItems(itemRequest.get("items"));
+        return getItemsList();
+
+
     }
 
     @DeleteMapping(value = "/delete/{itemName}")
