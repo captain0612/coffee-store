@@ -47,13 +47,9 @@ public class ItemsController {
 
     @DeleteMapping(value = "/delete/{itemName}")
     public ResponseEntity<Long> deletePost(@PathVariable String itemName) {
-        Boolean isRemoved = itemsService.deleteItemByName(itemName);
+      return itemsService.deleteItemByName(itemName);
 
-        if (!isRemoved) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
-        return new ResponseEntity("Deleted", HttpStatus.OK);
 
     }
 
