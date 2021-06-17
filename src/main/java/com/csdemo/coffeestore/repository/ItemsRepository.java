@@ -7,12 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ItemsRepository extends JpaRepository < Items, Integer >{
-	
-	@Query( "select new com.csdemo.coffeestore.contract.ItemsResponse(items.name, items.quantity, items.price) from Items items" )
-	List < ItemsResponse > findAllItems ();
-	
-	@Query( "FROM Items item WHERE name = ?1" )
-	Items findByname ( String itemName );
-	
+public interface ItemsRepository extends JpaRepository<Items, Integer> {
+
+    @Query("select new com.csdemo.coffeestore.contract.ItemsResponse(items.name, items.quantity, items.price) from Items items")
+    public List<ItemsResponse> findAllItems();
 }
