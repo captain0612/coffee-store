@@ -21,14 +21,16 @@ public class OrderController{
 	
 	@PostMapping( value="/confirm/{orderId}" )
 	public ResponseEntity confirmOrder ( @PathVariable( "orderId" ) int orderId ) {
-		OrderConfirmation obj=orderService.confirmOrder ( orderId );
-		return new ResponseEntity < OrderConfirmation > ( obj , HttpStatus.ACCEPTED );
+		OrderConfirmation cartItems=orderService.confirmOrder ( orderId );
+		return new ResponseEntity ( cartItems , HttpStatus.ACCEPTED );
 	}
 	
 	
 	@PostMapping( value="/addtocart" )
-	public int cart ( @RequestBody Map < String, List < CartRequest > > orderRequest ) {
-		return orderService.createCart ( orderRequest.get ( "Items" ) );
+	public ResponseEntity cart ( @RequestBody Map < String, List < CartRequest > > orderRequest ) {
+		OrderConfirmation response=orderService.createCart ( orderRequest.get ( "Items" ) );
+		return new ResponseEntity ( response , HttpStatus.ACCEPTED );
+		
 		
 	}
 	

@@ -66,8 +66,7 @@ public class OrderService{
 //        return ResponceList;
 //    }
 	
-	
-	public OrderConfirmation confirmOrder ( int OrderID ) {
+	public OrderConfirmation createOrderResponse ( int OrderID ) {
 		List < Cart > cartItems=cartRepo.findByCartId ( OrderID );
 		
 		OrderConfirmation confirmation=new OrderConfirmation ( );
@@ -93,34 +92,57 @@ public class OrderService{
 				if ( repoQuantity > 0 ) {
 					if ( repoQuantity < cartQuantity ) {
 						actual=Math.abs ( repoQuantity-cartQuantity );
-						repoItem.setQuantity ( 0 );
-					}
-					else {
-						repoItem.setQuantity ( repoQuantity-cartQuantity );
+						
 					}
 					
-					itemsRepo.save ( repoItem );
+					
 					Message   =actual+"/"+cartQuantity+" Avaiable";
 					totalPrice=actual*Itemprice;
 					orderTotal+=totalPrice;
+					responseObj.setPricePerItem ( Itemprice );
 				}
 			}
 			else {
 				Message="Item Not available in the Menu";
 				responseObj.setName ( item.getName ( ) );
+				
 			}
-			
 			responseObj.setPrice ( totalPrice );
 			responseObj.setAvailableQuantity ( Message );
 			responceList.add ( responseObj );
-			
 		}
-		confirmation.setTotal ( orderTotal );
+		confirmation.setOrderTotal ( orderTotal );
 		confirmation.setOrder_id ( OrderID );
 		return confirmation;
 	}
 	
-	public int createCart ( List < CartRequest > cartRequests ) {
+	public OrderConfirmation confirmOrder ( int OrderID ) {
+		List < Cart >     cartItems=cartRepo.findByCartId ( OrderID );
+		OrderConfirmation response =createOrderResponse ( OrderID );
+		for ( Cart item : cartItems ) {
+			Items repoItem=itemsRepo.findByname ( item.getName ( ) );
+			if ( repoItem != null ) {
+				int repoQuantity=repoItem.getQuantity ( );
+				if ( repoQuantity > 0 ) {
+					if ( repoQuantity < item.getQuantity ( ) ) {
+						repoItem.setQuantity ( 0 );
+					}
+					else {
+						repoItem.setQuantity ( repoItem.getQuantity ( )-item.getQuantity ( ) );
+					}
+					
+					itemsRepo.save ( repoItem );
+					
+				}
+			}
+			
+			
+		}
+		
+		return response;
+	}
+	
+	public OrderConfirmation createCart ( List < CartRequest > cartRequests ) {
 		Order order=new Order ( );
 		ordersRepo.save ( order );
 		for ( CartRequest cartRequest : cartRequests ) {
@@ -130,8 +152,7 @@ public class OrderService{
 			cartRepo.save ( cart );
 			
 		}
-		
-		return order.getOrder_id ( );
+		return createOrderResponse ( order.getOrder_id ( ) );
 		
 		
 	}
