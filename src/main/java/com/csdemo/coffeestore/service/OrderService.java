@@ -25,59 +25,15 @@ public class OrderService{
 	private CartRepository  cartRepo;
 	@Autowired
 	private OrderRepository ordersRepo;
-
-//    public List<CartResponse> placeOrder(List<CartRequest> cartRequests) {
-//        this.cartRequests = cartRequests;
-//        List<CartResponse> ResponceList = new ArrayList<>();
-//        CartResponse responseObj;
-//        int totalPrice = 0;
-//        String Message = "item not available";
-//
-//        for (CartRequest cartRequest : cartRequests) {
-//            responseObj = new CartResponse();
-//            Items repoItem = itemsRepo.findByname(cartRequest.getName());
-//
-//            if (repoItem != null) {
-//                BeanUtils.copyProperties(repoItem, responseObj);
-//                int orderQuantity = cartRequest.getQuantity();
-//                int Iteamprice = responseObj.getPrice();
-//
-//                int actual = orderQuantity;
-//                int repoQuantity = repoItem.getQuantity();
-//                if (repoQuantity > 0) {
-//                    if (repoQuantity < orderQuantity) {
-//                        actual = Math.abs(repoQuantity - orderQuantity);
-//
-//                    }
-//                    Message = actual + "/" + orderQuantity + " Avaiable";
-//                    totalPrice = actual * Iteamprice;
-//                }
-//            } else {
-//                Message = "Item Not available in the Menu";
-//                responseObj.setName(cartRequest.getName());
-//            }
-//
-//            responseObj.setPrice(totalPrice);
-//            responseObj.setAvailability(Message);
-//            ResponceList.add(responseObj);
-//
-//        }
-//
-//        return ResponceList;
-//    }
 	
 	public OrderConfirmation createOrderResponse ( int OrderID ) {
-		List < Cart > cartItems=cartRepo.findByCartId ( OrderID );
-		
-		OrderConfirmation confirmation=new OrderConfirmation ( );
-		
+		List < Cart >         cartItems   =cartRepo.findByCartId ( OrderID );
+		OrderConfirmation     confirmation=new OrderConfirmation ( );
 		List < CartResponse > responceList=confirmation.getResponceList ( );
 		CartResponse          responseObj;
 		int                   orderTotal  =0;
 		
-		
 		for ( Cart item : cartItems ) {
-			
 			int    totalPrice=0;
 			String Message   ="item not available";
 			responseObj=new CartResponse ( );
@@ -92,10 +48,7 @@ public class OrderService{
 				if ( repoQuantity > 0 ) {
 					if ( repoQuantity < cartQuantity ) {
 						actual=Math.abs ( repoQuantity-cartQuantity );
-						
 					}
-					
-					
 					Message   =actual+"/"+cartQuantity+" Avaiable";
 					totalPrice=actual*Itemprice;
 					orderTotal+=totalPrice;
@@ -135,10 +88,7 @@ public class OrderService{
 					
 				}
 			}
-			
-			
 		}
-		
 		return response;
 	}
 	
@@ -146,6 +96,7 @@ public class OrderService{
 		Order order=new Order ( );
 		ordersRepo.save ( order );
 		for ( CartRequest cartRequest : cartRequests ) {
+			
 			Cart cart=new Cart ( order );
 			cart.setName ( cartRequest.getName ( ) );
 			cart.setQuantity ( cartRequest.getQuantity ( ) );
@@ -153,8 +104,6 @@ public class OrderService{
 			
 		}
 		return createOrderResponse ( order.getOrder_id ( ) );
-		
-		
 	}
 }
 
