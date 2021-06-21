@@ -13,26 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping( value="/order" )
+@RequestMapping(value = "/order")
 @Slf4j
-public class OrderController{
-	@Autowired
-	private OrderService orderService;
-	
-	@PostMapping( value="/confirm/{orderId}" )
-	public ResponseEntity confirmOrder ( @PathVariable( "orderId" ) int orderId ) {
-		OrderConfirmation cartItems=orderService.confirmOrder ( orderId );
-		return new ResponseEntity ( cartItems , HttpStatus.ACCEPTED );
-	}
-	
-	
-	@PostMapping( value="/addtocart" )
-	public ResponseEntity cart ( @RequestBody Map < String, List < CartRequest > > orderRequest ) {
-		OrderConfirmation response=orderService.createCart ( orderRequest.get ( "Items" ) );
-		return new ResponseEntity ( response , HttpStatus.ACCEPTED );
-		
-		
-	}
-	
-	
+public class OrderController {
+  @Autowired private OrderService orderService;
+
+  @PostMapping(value = "/confirm/{orderId}")
+  public ResponseEntity confirmOrder(@PathVariable("orderId") int orderId) {
+    OrderConfirmation cartItems = orderService.confirmOrder(orderId);
+    return new ResponseEntity(cartItems, HttpStatus.ACCEPTED);
+  }
+
+  @PostMapping(value = "/addtocart")
+  public ResponseEntity cart(@RequestBody Map<String, List<CartRequest>> orderRequest) {
+    OrderConfirmation response = orderService.createCart(orderRequest.get("Items"));
+    return new ResponseEntity(response, HttpStatus.ACCEPTED);
+  }
 }

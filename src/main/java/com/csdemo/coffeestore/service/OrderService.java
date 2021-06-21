@@ -1,5 +1,6 @@
 package com.csdemo.coffeestore.service;
 
+import com.csdemo.coffeestore.constant.ErrorMessageConstants;
 import com.csdemo.coffeestore.contract.CartResponse;
 import com.csdemo.coffeestore.contract.OrderConfirmation;
 import com.csdemo.coffeestore.dto.CartRequest;
@@ -16,95 +17,82 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+public class OrderService {
 
-public class OrderService{
-	
-	@Autowired
-	private ItemsRepository itemsRepo;
-	@Autowired
-	private CartRepository  cartRepo;
-	@Autowired
-	private OrderRepository ordersRepo;
-	
-	public OrderConfirmation createOrderResponse ( int OrderID ) {
-		List < Cart >         cartItems   =cartRepo.findByCartId ( OrderID );
-		OrderConfirmation     confirmation=new OrderConfirmation ( );
-		List < CartResponse > responceList=confirmation.getResponceList ( );
-		CartResponse          responseObj;
-		int                   orderTotal  =0;
-		
-		for ( Cart item : cartItems ) {
-			int    totalPrice=0;
-			String Message   ="item not available";
-			responseObj=new CartResponse ( );
-			Items repoItem=itemsRepo.findByname ( item.getName ( ) );
-			
-			if ( repoItem != null ) {
-				BeanUtils.copyProperties ( repoItem , responseObj );
-				int cartQuantity=item.getQuantity ( );
-				int Itemprice   =responseObj.getPrice ( );
-				int actual      =cartQuantity;
-				int repoQuantity=repoItem.getQuantity ( );
-				if ( repoQuantity > 0 ) {
-					if ( repoQuantity < cartQuantity ) {
-						actual=Math.abs ( repoQuantity-cartQuantity );
-					}
-					Message   =actual+"/"+cartQuantity+" Avaiable";
-					totalPrice=actual*Itemprice;
-					orderTotal+=totalPrice;
-					responseObj.setPricePerItem ( Itemprice );
-				}
-			}
-			else {
-				Message="Item Not available in the Menu";
-				responseObj.setName ( item.getName ( ) );
-				
-			}
-			responseObj.setPrice ( totalPrice );
-			responseObj.setAvailableQuantity ( Message );
-			responceList.add ( responseObj );
-		}
-		confirmation.setOrderTotal ( orderTotal );
-		confirmation.setOrder_id ( OrderID );
-		return confirmation;
-	}
-	
-	public OrderConfirmation confirmOrder ( int OrderID ) {
-		List < Cart >     cartItems=cartRepo.findByCartId ( OrderID );
-		OrderConfirmation response =createOrderResponse ( OrderID );
-		for ( Cart item : cartItems ) {
-			Items repoItem=itemsRepo.findByname ( item.getName ( ) );
-			if ( repoItem != null ) {
-				int repoQuantity=repoItem.getQuantity ( );
-				if ( repoQuantity > 0 ) {
-					if ( repoQuantity < item.getQuantity ( ) ) {
-						repoItem.setQuantity ( 0 );
-					}
-					else {
-						repoItem.setQuantity ( repoItem.getQuantity ( )-item.getQuantity ( ) );
-					}
-					
-					itemsRepo.save ( repoItem );
-					
-				}
-			}
-		}
-		return response;
-	}
-	
-	public OrderConfirmation createCart ( List < CartRequest > cartRequests ) {
-		Order order=new Order ( );
-		ordersRepo.save ( order );
-		for ( CartRequest cartRequest : cartRequests ) {
-			
-			Cart cart=new Cart ( order );
-			cart.setName ( cartRequest.getName ( ) );
-			cart.setQuantity ( cartRequest.getQuantity ( ) );
-			cartRepo.save ( cart );
-			
-		}
-		return createOrderResponse ( order.getOrder_id ( ) );
-	}
+  @Autowired private ItemsRepository itemsRepo;
+  @Autowired private CartRepository cartRepo;
+  @Autowired private OrderRepository ordersRepo;
+
+  public OrderConfirmation confirmOrder(int OrderID) {
+    List<Cart> cartItems = cartRepo.findByCartId(OrderID);
+    OrderConfirmation response = createOrderResponse(OrderID);
+    for (Cart item : cartItems) {
+      Items repoItem = itemsRepo.findByname(item.getName());
+      if (repoItem != null) {
+        int repoQuantity = repoItem.getQuantity();
+        if (repoQuantity > 0) {
+          if (repoQuantity < item.getQuantity()) {
+            repoItem.setQuantity(0);
+          } else {
+            repoItem.setQuantity(repoItem.getQuantity() - item.getQuantity());
+          }
+
+          itemsRepo.save(repoItem);
+        }
+      }
+    }
+    return response;
+  }
+
+  public OrderConfirmation createOrderResponse(int OrderID) {
+    List<Cart> cartItems = cartRepo.findByCartId(OrderID);
+    OrderConfirmation confirmation = new OrderConfirmation();
+    List<CartResponse> responceList = confirmation.getResponceList();
+    CartResponse responseObj;
+    int orderTotal = 0;
+
+    for (Cart item : cartItems) {
+      int totalPrice = 0;
+      String Message = ErrorMessageConstants.ITEM_NOT_AVAILABLE;
+      responseObj = new CartResponse();
+      Items repoItem = itemsRepo.findByname(item.getName());
+
+      if (repoItem != null) {
+        BeanUtils.copyProperties(repoItem, responseObj);
+        int cartQuantity = item.getQuantity();
+        int Itemprice = responseObj.getPrice();
+        int actual = cartQuantity;
+        int repoQuantity = repoItem.getQuantity();
+        if (repoQuantity > 0) {
+          if (repoQuantity < cartQuantity) {
+            actual = Math.abs(repoQuantity - cartQuantity);
+          }
+          Message = actual + "/" + cartQuantity + " Avaiable";
+          totalPrice = actual * Itemprice;
+          orderTotal += totalPrice;
+          responseObj.setPricePerItem(Itemprice);
+        }
+      } else {
+        responseObj.setName(item.getName());
+      }
+      responseObj.setPrice(totalPrice);
+      responseObj.setAvailableQuantity(Message);
+      responceList.add(responseObj);
+    }
+    confirmation.setOrderTotal(orderTotal);
+    confirmation.setOrder_id(OrderID);
+    return confirmation;
+  }
+
+  public OrderConfirmation createCart(List<CartRequest> cartRequests) {
+    Order order = new Order();
+    ordersRepo.save(order);
+    for (CartRequest cartRequest : cartRequests) {
+      Cart cart = new Cart(order);
+      cart.setName(cartRequest.getName());
+      cart.setQuantity(cartRequest.getQuantity());
+      cartRepo.save(cart);
+    }
+    return createOrderResponse(order.getOrder_id());
+  }
 }
-
-

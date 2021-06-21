@@ -18,39 +18,28 @@ import java.util.Map;
 @Slf4j
 public class ItemsController {
 
-    @Autowired
-    private ItemsService itemsService;
+  @Autowired private ItemsService itemsService;
 
+  @PostMapping
+  public ResponseEntity postItem(@RequestBody Map<String, List<ItemsRequest>> itemRequest) {
+    itemsService.addItems(itemRequest.get("items"));
+    return getItemsList();
+  }
 
-
-    @GetMapping
-    public ResponseEntity getItemsList() {
-
-        List<ItemsResponse> itemsMenu = new ArrayList<>();
-        try {
-            itemsMenu = itemsService.getItemsList();
-        } catch (Exception ex) {
-            log.error("exception while fetching items menu : {}", ex.getMessage());
-        }
-
-        return new ResponseEntity<List<ItemsResponse>>(itemsMenu, HttpStatus.ACCEPTED);
+  @GetMapping
+  public ResponseEntity getItemsList() {
+    List<ItemsResponse> itemsMenu = new ArrayList<>();
+    try {
+      itemsMenu = itemsService.getItemsList();
+    } catch (Exception ex) {
+      log.error("exception while fetching items menu : {}", ex.getMessage());
     }
+    return new ResponseEntity<List<ItemsResponse>>(itemsMenu, HttpStatus.ACCEPTED);
+  }
 
-    @PostMapping
-    public ResponseEntity postItem(@RequestBody Map<String, List<ItemsRequest>> itemRequest) {
-
-        itemsService.addItems(itemRequest.get("items"));
-        return getItemsList();
-
-
-    }
-
-    @DeleteMapping(value = "/delete/{itemName}")
-    public ResponseEntity<Long> deletePost(@PathVariable String itemName) {
-      return itemsService.deleteItemByName(itemName);
-
-
-
-    }
-
+  @DeleteMapping(value = "/delete/{itemName}")
+  public ResponseEntity deletePost(@PathVariable String itemName) {
+    itemsService.deleteItemByName(itemName);
+    return new ResponseEntity(HttpStatus.ACCEPTED);
+  }
 }

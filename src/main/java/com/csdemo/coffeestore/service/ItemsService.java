@@ -3,11 +3,9 @@ package com.csdemo.coffeestore.service;
 import com.csdemo.coffeestore.contract.ItemsResponse;
 import com.csdemo.coffeestore.dto.ItemsRequest;
 import com.csdemo.coffeestore.entity.Items;
-import com.csdemo.coffeestore.exception.ResourceNotFoundException;
 import com.csdemo.coffeestore.repository.ItemsRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,11 +34,8 @@ public class ItemsService {
     }
   }
 
-  public ResponseEntity deleteItemByName(String itemName) {
+  public void deleteItemByName(String itemName) {
     Items repoItem = itemsRepo.findByname(itemName);
-    if (repoItem != null) {
-      itemsRepo.delete(repoItem);
-      return ResponseEntity.ok().build();
-    } else throw new ResourceNotFoundException("Item " + itemName + "Not available in the menu");
+    itemsRepo.delete(repoItem);
   }
 }
