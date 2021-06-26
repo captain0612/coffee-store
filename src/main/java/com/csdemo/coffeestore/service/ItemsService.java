@@ -1,6 +1,5 @@
 package com.csdemo.coffeestore.service;
 
-import com.csdemo.coffeestore.contract.ItemsResponse;
 import com.csdemo.coffeestore.dto.ItemsRequest;
 import com.csdemo.coffeestore.entity.Items;
 import com.csdemo.coffeestore.repository.ItemsRepository;
@@ -15,8 +14,8 @@ public class ItemsService {
 
   @Autowired private ItemsRepository itemsRepo;
 
-  public List<ItemsResponse> getItemsList() {
-    return itemsRepo.findAllItems();
+  public void getItemsList() {
+    itemsRepo.findAllItems();
   }
 
   public void addItems(List<ItemsRequest> itemRequests) {

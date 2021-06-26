@@ -1,11 +1,14 @@
 # Read Me First
+
 The following was discovered as part of building this project:
 
-* The original package name 'com.cs-demo.coffee-store' is invalid and this project uses 'com.csdemo.coffeestore' instead.
+* The original package name 'com.cs-demo.coffee-store' is invalid and this project uses 'com.csdemo.coffeestore'
+  instead.
 
 # Getting Started
 
 ### Reference Documentation
+
 For further reference, please consider the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
@@ -15,6 +18,7 @@ For further reference, please consider the following sections:
 * [Flyway Migration](https://docs.spring.io/spring-boot/docs/2.4.5/reference/htmlsingle/#howto-execute-flyway-database-migrations-on-startup)
 
 ### Guides
+
 The following guides illustrate how to use some features concretely:
 
 * [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)

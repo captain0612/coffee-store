@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS `cart` (
   `order_id` int unsigned NOT NULL,
    `name` varchar(20),
   `quantity` int,
+  `create_date_time` DATETIME,
+  `update_date_time` DATETIME,
   PRIMARY KEY (`cart_id`),
   CONSTRAINT `order_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
 );

@@ -5,14 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
+public class CartResponse {
 
-public class CartResponse{
-	
-	private String name;
-	private String availableQuantity;
-	private int    pricePerItem;
-	private int    price;
-	
-	
+  private String name;
+  private String availableQuantity;
+  private int pricePerItem;
+  private int price;
 }
-

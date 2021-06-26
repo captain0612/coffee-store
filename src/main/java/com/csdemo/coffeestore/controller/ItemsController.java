@@ -30,7 +30,7 @@ public class ItemsController {
   public ResponseEntity getItemsList() {
     List<ItemsResponse> itemsMenu = new ArrayList<>();
     try {
-      itemsMenu = itemsService.getItemsList();
+      itemsService.getItemsList();
     } catch (Exception ex) {
       log.error("exception while fetching items menu : {}", ex.getMessage());
     }
