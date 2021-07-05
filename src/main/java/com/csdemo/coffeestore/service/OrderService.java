@@ -47,7 +47,7 @@ public class OrderService {
   public OrderConfirmation createOrderResponse(int OrderID) {
     List<Cart> cartItems = cartRepo.findByCartId(OrderID);
     OrderConfirmation confirmation = new OrderConfirmation();
-    List<CartResponse> responceList = confirmation.getResponceList();
+    List<CartResponse> responceList = confirmation.getResponseList();
     CartResponse responseObj;
     int orderTotal = 0;
 
